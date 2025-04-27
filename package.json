@@ -1,0 +1,22 @@
+{
+  "name": "devflow",
+  "version": "1.0.0",
+  "description": "it is cli for automating the process of creating branch to submiting pr",
+  "keywords": [
+    "devflow"
+  ],
+  "license": "ISC",
+  "author": "Bheru Prajapat",
+  "type": "module",
+  "main": "bin/devflow.js",
+  "bin": {
+    "devflow": "./bin/devflow.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "os": "^0.1.2",
+    "prompts": "^2.4.2"
+  }
+}
