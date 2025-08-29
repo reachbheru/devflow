@@ -1,10 +1,5 @@
-import { getSemanticChunks } from "./chunkUtils.js";
-import { embedChunks } from "../services/embeddingService.js";
-import { getFileUtils } from "../../dependency/service_deps.js";
-import { saveEmbeddings } from "../services/embeddingStorage.js";
-
 export class FileProcessorQueue {
-  constructor(maxWorkers = 5) {
+  constructor(maxWorkers = 5, chunkUtils, embeddingUtils, fileUtils) {
     this.queue = [];
     this.maxWorkers = maxWorkers;
     this.activeWorkers = 0;
@@ -40,12 +35,10 @@ export class FileProcessorQueue {
   }
 
   async processFile(filePath) {
-    const fileUtils = getFileUtils();
-    const file_content = await fileUtils.readFile(filePath);
-    const file_chunks = await getSemanticChunks(file_content);
-    const file_embeddings = await embedChunks(file_chunks);
-    console.log(file_embeddings);
-    await saveEmbeddings(filePath, file_chunks, file_embeddings);
+    const file_content = await this.fileUtils.readFile(filePath);
+    const file_chunks = await this.chunkUtils.getSemanticChunks(file_content);
+    const file_embeddings = await this.embeddingUtils.generateEmbeddings(file_chunks);
+    await this.embeddingUtils.persistEmbeddings(filePath, file_chunks, file_embeddings);
   }
 
   onDone(callback) {
