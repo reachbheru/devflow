@@ -1,6 +1,11 @@
 import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
 
 export class chunkUtils {
+  async flattenChunks([filePath, chunks]) {
+    const text = chunks.map((c) => c.content).join("\n");
+    return text;
+  }
+
   async getSemanticChunks(text) {
     const textSplitter = new RecursiveCharacterTextSplitter({
       chunkSize: 900, // 900 characters per chunk

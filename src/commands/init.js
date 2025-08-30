@@ -1,7 +1,7 @@
 import prompts from "prompts";
 import { ConfigService } from "../modules/config/configService.js";
 
-function init() {
+async function init() {
   console.log("init started ...");
 
   const questions = [
@@ -21,12 +21,11 @@ function init() {
       message: "what is your base branch",
     },
   ];
-  (async () => {
-    const response = await prompts(questions);
-    const configService = new ConfigService();
-    configService.saveGlobalConfig(response);
-    configService.readGlobalConfig();
-  })();
+
+  const response = await prompts(questions);
+  const configService = new ConfigService();
+  configService.saveGlobalConfig(response);
+  configService.readGlobalConfig();
 }
 
 export { init };

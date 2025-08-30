@@ -42,12 +42,11 @@ export class FileUtils {
 
     let release;
     try {
-
       release = await lockfile.lock(filePath, {
         retries: {
-          retries: 3,    // Number of retries
+          retries: 3, // Number of retries
           minTimeout: 200, // Wait 200ms before first retry
-          factor: 2,       // Double the wait time each retry
+          factor: 2, // Double the wait time each retry
         },
       });
 
@@ -65,15 +64,13 @@ export class FileUtils {
               error.message,
             ]);
           }
-        
         }
       }
       await fs.writeFile(filePath, JSON.stringify(data, null, 2), "utf-8");
       return true;
     } catch (error) {
       throw new this.custom_error("failed to write json", [error.message]);
-    }
-    finally {
+    } finally {
       if (release) {
         await release();
       }
@@ -85,7 +82,7 @@ export class FileUtils {
     if (!filePath) throw new this.custom_error("file path not provided");
     try {
       const fileData = await fs.readFile(filePath, "utf-8");
-      if (!fileData || fileData.length === 0) return{};
+      if (!fileData || fileData.length === 0) return {};
       return JSON.parse(fileData);
     } catch (error) {
       throw new this.custom_error("failed to read json", [error.message]);
@@ -172,13 +169,22 @@ export class FileUtils {
     }
   }
 
-
   // Read file
   async readFile(filePath) {
     try {
       return await fs.readFile(filePath, "utf-8");
     } catch (error) {
       throw new this.custom_error("failed to read file", [error.message]);
+    }
+  }
+
+  // Write file
+  async writeFile(filePath, data) {
+    try {
+      await fs.writeFile(filePath, data, "utf-8");
+      return true;
+    } catch (error) {
+      throw new this.custom_error("failed to write file", [error.message]);
     }
   }
 

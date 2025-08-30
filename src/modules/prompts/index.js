@@ -1,0 +1,1 @@
+export { docsGenerationPrompt, docsRefinementPrompt} from "./docsPrompts.js";

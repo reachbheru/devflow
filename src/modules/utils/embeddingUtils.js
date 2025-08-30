@@ -4,8 +4,8 @@ import fs from "fs";
 const storageFile = path.join(process.cwd(), "embedding.json");
 
 export class embeddingUtils {
-  constructor(ai, fileUtils) {
-    this.ai = ai;
+  constructor(llmClient, fileUtils) {
+    this.llmClient = llmClient;
     this.fileUtils = fileUtils;
   }
 
@@ -35,25 +35,11 @@ export class embeddingUtils {
         content: context[i].content,
       });
     }
-    console.log(fileMap);
     return fileMap;
   }
 
   async generateEmbeddings(chunks) {
-    const embeddings = [];
-    const batchSize = 100;
-    for (let i = 0; i < chunks.length; i += batchSize) {
-      const batch = chunks.slice(i, i + batchSize);
-
-      // Correct usage: call genAI.models.embedContent
-      const result = await this.ai.models.embedContent({
-        model: "gemini-embedding-001",
-        contents: batch,
-      });
-
-      embeddings.push(...result.embeddings);
-    }
-    return embeddings;
+    return await this.llmClient.generateEmbeddings(chunks);
   }
 
   async ensureStorage() {

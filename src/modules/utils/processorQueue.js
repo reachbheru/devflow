@@ -1,5 +1,8 @@
 export class FileProcessorQueue {
-  constructor(maxWorkers = 5, chunkUtils, embeddingUtils, fileUtils) {
+  constructor(chunkUtils, embeddingUtils, fileUtils, maxWorkers = 5) {
+    this.chunkUtils = chunkUtils;
+    this.embeddingUtils = embeddingUtils;
+    this.fileUtils = fileUtils;
     this.queue = [];
     this.maxWorkers = maxWorkers;
     this.activeWorkers = 0;
@@ -26,7 +29,7 @@ export class FileProcessorQueue {
     try {
       await this.processFile(filePath);
     } catch (err) {
-      console.warn(`Failed ${filePath}, retrying…`,err.message);
+      console.warn(`Failed ${filePath}, retrying…`, err.message);
       this.queue.push(filePath); // simple retry
     }
 
@@ -37,8 +40,14 @@ export class FileProcessorQueue {
   async processFile(filePath) {
     const file_content = await this.fileUtils.readFile(filePath);
     const file_chunks = await this.chunkUtils.getSemanticChunks(file_content);
-    const file_embeddings = await this.embeddingUtils.generateEmbeddings(file_chunks);
-    await this.embeddingUtils.persistEmbeddings(filePath, file_chunks, file_embeddings);
+    const file_embeddings = await this.embeddingUtils.generateEmbeddings(
+      file_chunks
+    );
+    await this.embeddingUtils.persistEmbeddings(
+      filePath,
+      file_chunks,
+      file_embeddings
+    );
   }
 
   onDone(callback) {

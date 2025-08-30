@@ -7,6 +7,9 @@ import { CustomError } from "../modules/utils/customError.js";
 import { FileProcessorQueue } from "../modules/utils/processorQueue.js";
 import { chunkUtils } from "../modules/utils/chunkUtils.js";
 import { embeddingUtils } from "../modules/utils/embeddingUtils.js";
+import { llmClient } from "../modules/llm/llmClient.js";
+import { contextPreprocessor } from "../modules/services/contextPreprocessor.js";
+import { docsGenerator } from "../modules/services/docsGenerator.js";
 
 dotenv.config();
 
@@ -27,7 +30,11 @@ function getCustomError() {
 }
 
 function getQueue() {
-  return new FileProcessorQueue();
+  return new FileProcessorQueue(
+    getChunkUtils(),
+    getEmbeddingUtils(),
+    getFileUtils()
+  );
 }
 
 function getGoogleAi() {
@@ -39,7 +46,26 @@ function getChunkUtils() {
 }
 
 function getEmbeddingUtils() {
-  return new embeddingUtils(getGoogleAi(), getFileUtils());
+  return new embeddingUtils(getllmClient(), getFileUtils());
+}
+
+function getllmClient() {
+  return new llmClient(getGoogleAi(), getCustomError());
+}
+
+function getContextPreprocessor() {
+  return new contextPreprocessor(getChunkUtils(), getCustomError());
+}
+
+function getDocsGenerator() {
+  return new docsGenerator(
+    getFileUtils(),
+    getChunkUtils(),
+    getllmClient(),
+    getEmbeddingUtils(),
+    getQueue(),
+    getContextPreprocessor()
+  );
 }
 
 export {
@@ -51,4 +77,7 @@ export {
   getGoogleAi,
   getChunkUtils,
   getEmbeddingUtils,
+  getllmClient,
+  getContextPreprocessor,
+  getDocsGenerator,
 };
