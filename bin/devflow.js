@@ -29,7 +29,9 @@ program
   .option("--includeHidden", "Include hidden files in the documentation")
   .option("--excludeList <items>", "Comma-separated list of file or folder names to exclude", (val) => val.split(","))
   .action(async (options) => {
+    console.log("Generating project documentation...");
     await docs(options);
+    console.log("Documentation generated successfully!");
   });
 
 program.parse(process.argv);
