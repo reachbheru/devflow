@@ -23,7 +23,7 @@ export class contextPreprocessor {
       // Expand end until the slice is too big or reaches the end
       while (
         end <= contextText.length &&
-        (await this.chunkUtils.getSliceLength(contextText.slice(start, end))) <=
+        (await this.chunkUtils.getSliceLength([contextText.slice(start, end)])) <=
           maxBatchSize
       ) {
         end++;

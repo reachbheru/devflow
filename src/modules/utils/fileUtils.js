@@ -90,12 +90,10 @@ export class FileUtils {
   }
 
   // Collect files into a tree
-  async collectFiles(dirPath, options = {}, queue) {
+  async collectFiles(dirPath, fileTreeObject, options = {}, queue) {
     if (!dirPath) throw new this.custom_error("directory path not provided");
     try {
-      const fileTreeObject = {};
       await this.generateFileTree(dirPath, fileTreeObject, options, queue);
-      return fileTreeObject;
     } catch (error) {
       throw new this.custom_error("failed to collect files", [error.message]);
     }

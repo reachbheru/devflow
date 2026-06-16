@@ -1,5 +1,5 @@
 export class FileProcessorQueue {
-  constructor(chunkUtils, embeddingUtils, fileUtils, maxWorkers = 5) {
+  constructor(chunkUtils, embeddingUtils, fileUtils, maxWorkers = 3) {
     this.chunkUtils = chunkUtils;
     this.embeddingUtils = embeddingUtils;
     this.fileUtils = fileUtils;
